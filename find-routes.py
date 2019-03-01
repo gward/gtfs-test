@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
-# find routes that hit a given stop ("Grand Central - 42 St")
+# find routes that hit a given (hardcoded) stop
 
 import csv
 
 
 def main():
     with open('stops.txt') as stops_fh:
-        stop_ids = set(find_stop_ids(stops_fh, 'Grand Central - 42 St'))
+        stop_ids = set(find_stop_ids(stops_fh, 'Grand Central'))
     assert len(stop_ids) > 0, 'no stops found'
 
     with open('stop_times.txt') as stoptimes_fh:
@@ -18,11 +18,11 @@ def main():
             print(route_id)
 
 
-def find_stop_ids(stops_fh, want_name):
+def find_stop_ids(stops_fh, name_prefix):
     """parse stops.txt, yield sequence of stop IDs based on want_name"""
     (reader, indexes) = open_csv(stops_fh, 'stop_id', 'stop_name')
     for line in reader:
-        if line[indexes.stop_name] == want_name:
+        if line[indexes.stop_name].startswith(name_prefix):
             yield line[indexes.stop_id]
 
 

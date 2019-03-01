@@ -21,37 +21,43 @@ def main():
 
 
 def find_stop_ids(stops_fh, want_name):
-    reader = csv.reader(stops_fh)
-    headers = next(reader)
-    id_idx = headers.index('stop_id')
-    name_idx = headers.index('stop_name')
+    (reader, indexes) = open_csv(stops_fh, 'stop_id', 'stop_name')
     for line in reader:
-        if line[name_idx] == want_name:
-            yield line[id_idx]
+        if line[indexes.stop_name] == want_name:
+            yield line[indexes.stop_id]
 
 
 def find_trip_ids(stoptimes_fh, stop_ids):
-    reader = csv.reader(stoptimes_fh)
-    headers = next(reader)
-    id_idx = headers.index('stop_id')
-    trip_id_idx = headers.index('trip_id')
+    (reader, indexes) = open_csv(stoptimes_fh, 'stop_id', 'trip_id')
     for line in reader:
-        if line[id_idx] in stop_ids:
-            yield line[trip_id_idx]
+        if line[indexes.stop_id] in stop_ids:
+            yield line[indexes.trip_id]
 
 
 def find_routes(trips_fh, trip_ids):
-    reader = csv.reader(trips_fh)
-    headers = next(reader)
-    trip_id_idx = headers.index('trip_id')
-    route_id_idx = headers.index('route_id')
+    (reader, indexes) = open_csv(trips_fh, 'trip_id', 'route_id')
     seen = set()
     for line in reader:
-        if line[trip_id_idx] in trip_ids:
-            route_id = line[route_id_idx]
+        if line[indexes.trip_id] in trip_ids:
+            route_id = line[indexes.route_id]
             if route_id not in seen:
                 yield route_id
                 seen.add(route_id)
+
+
+class Indexes:
+    # dummy object that lets you set any attribute
+    pass
+
+
+def open_csv(fh, *want_columns):
+    reader = csv.reader(fh)
+    headers = next(reader)
+    indexes = Indexes()
+    for col in want_columns:
+        setattr(indexes, col, headers.index(col))
+
+    return (reader, indexes)
 
 
 main()

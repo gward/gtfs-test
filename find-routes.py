@@ -9,11 +9,9 @@ def main():
     with open('stops.txt') as stops_fh:
         stop_ids = set(find_stop_ids(stops_fh, 'Grand Central - 42 St'))
     assert len(stop_ids) > 0, 'no stops found'
-    print('stop_ids:', stop_ids)
 
     with open('stop_times.txt') as stoptimes_fh:
         trip_ids = set(find_trip_ids(stoptimes_fh, stop_ids))
-    print('trip_ids:', len(trip_ids))
 
     with open('trips.txt') as trips_fh:
         for route_id in find_routes(trips_fh, trip_ids):

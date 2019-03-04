@@ -17,8 +17,7 @@ function main() {
 }
 
 function find_stop_ids(filename, prefix) {
-  let data = fs.readFileSync(filename, {encoding: "utf8"});
-  let records = csvparse(data, {columns: true});
+  let records = read_csv(filename);
   let results = new Set();
   for (let record of records) {
     if (record.stop_name.startsWith(prefix)) {
@@ -29,8 +28,7 @@ function find_stop_ids(filename, prefix) {
 }
 
 function find_trip_ids(filename, stop_ids) {
-  let data = fs.readFileSync(filename, {encoding: "utf8"});
-  let records = csvparse(data, {columns: true});
+  let records = read_csv(filename);
   let results = new Set();
   for (let record of records) {
     if (stop_ids.has(record.stop_id)) {
@@ -42,8 +40,7 @@ function find_trip_ids(filename, stop_ids) {
 }
 
 function find_routes(filename, trip_ids) {
-  let data = fs.readFileSync(filename, {encoding: "utf8"});
-  let records = csvparse(data, {columns: true});
+  let records = read_csv(filename);
   let results = new Set();
   for (let record of records) {
     if (trip_ids.has(record.trip_id)) {
@@ -51,6 +48,13 @@ function find_routes(filename, trip_ids) {
     }
   }
   return results;
+}
+
+// open filename, read it completely into memory, and return an array
+// of records (one object per line, excluding the header line)
+function read_csv(filename) {
+  let data = fs.readFileSync(filename, {encoding: "utf8"});
+  return csvparse(data, {columns: true});
 }
 
 main();

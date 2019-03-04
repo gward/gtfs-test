@@ -1,6 +1,16 @@
 #!/usr/local/bin/node
 
 // find routes that hit a given (hardcoded) stop
+//
+// Uses synchronous filesystem and csv-parse APIs, because it's the
+// easiest way to do it. But this version is 5x slower than the Python
+// version. Unclear why: maybe the use of synchronous I/O is to blame?
+// No evidence for that, but I have a hard time believing that reading
+// files in Python is 5x faster than in Node.
+//
+// (The CSV parser here is doing a bit more work, and making them
+// equivalent yielded roughly 20% speedup -- nowhere close to 5x! So
+// that's not the whole story.)
 
 const fs = require('fs');
 const csvparse = require('csv-parse/lib/sync');

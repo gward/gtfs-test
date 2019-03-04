@@ -14,6 +14,8 @@ function main() {
   }
 }
 
+// find stops whose name starts with prefix; return set of stop IDs
+// (string)
 function find_stop_ids(filename, prefix) {
   let records = read_csv(filename);
   let results = new Set();
@@ -25,6 +27,8 @@ function find_stop_ids(filename, prefix) {
   return results;
 }
 
+// find trips that hit a stop in stop_ids (a set); return set of trip
+// IDs (string)
 function find_trip_ids(filename, stop_ids) {
   let records = read_csv(filename);
   let results = new Set();
@@ -36,6 +40,8 @@ function find_trip_ids(filename, stop_ids) {
   return results;
 }
 
+// find routes that include a trip in trip_ids; return set of route
+// IDs (string)
 function find_routes(filename, trip_ids) {
   let records = read_csv(filename);
   let results = new Set();
